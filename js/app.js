@@ -43,16 +43,42 @@ function mostrarError (msj) {
 function consultarApi (ciudad, pais) {
 
     const id = '8a723e3be389251c86a9b8645e4e777f';
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${ciudad},${pais}&appid=${id}`;
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${ciudad},${pais}&units=metric&appid=${id}`;
 
     fetch(url)
         .then( resp => {
             return resp.json();
         })
         .then( datos => {
-            console.log(datos);
+
+            limpiarHTML(); // limpio el HTML al obtener el resultado.
+
             if (datos.cod === '404') {
-                mostrarError('La ciudad no es válida o no fue encontrada.')
+                mostrarError('La ciudad no es válida o no fue encontrada.');
+                return;
             }
+            // Display en el HTML si todo OK
+            mostrarClima(datos);
         })
+}
+
+function mostrarClima(datos) {
+
+    const { main: { temp, temp_max, temp_min } } = datos;
+
+    const actual = document.createElement('P');
+    actual.textContent = `${parseInt(temp)}°C`;
+    actual.classList.add('font-bold', 'text-6xl');
+
+    const resultadoDiv = document.createElement('DIV');
+    resultadoDiv.classList.add('text-white', 'text-center');
+    resultadoDiv.appendChild(actual);
+
+    resultado.appendChild(resultadoDiv);
+} 
+
+function limpiarHTML () {
+    while(resultado.firstChild) {
+        resultado.removeChild(resultado.firstChild);
+    }
 }
