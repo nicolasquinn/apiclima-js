@@ -51,7 +51,7 @@ function consultarApi (ciudad, pais) {
         })
         .then( datos => {
 
-            limpiarHTML(); // limpio el HTML al obtener el resultado.
+            limpiarHTML(); // limpio el HTML previo al obtener el resultado.
 
             if (datos.cod === '404') {
                 mostrarError('La ciudad no es válida o no fue encontrada.');
@@ -64,15 +64,30 @@ function consultarApi (ciudad, pais) {
 
 function mostrarClima(datos) {
 
-    const { main: { temp, temp_max, temp_min } } = datos;
+    const { name, main: { temp, temp_max, temp_min } } = datos;
+
+    const nombreCiudad = document.createElement('P');
+    nombreCiudad.textContent = name;
+    nombreCiudad.classList.add('font-bold', 'text-2xl');
 
     const actual = document.createElement('P');
     actual.textContent = `${parseInt(temp)}°C`;
     actual.classList.add('font-bold', 'text-6xl');
 
+    const min = document.createElement('P');
+    min.textContent = `Min: ${parseInt(temp_min)}°C`;
+    min.classList.add('text-xl');
+
+    const max = document.createElement('P');
+    max.textContent = `Max: ${parseInt(temp_max)}°C`;
+    max.classList.add('text-xl');
+
     const resultadoDiv = document.createElement('DIV');
     resultadoDiv.classList.add('text-white', 'text-center');
+    resultadoDiv.appendChild(nombreCiudad);
     resultadoDiv.appendChild(actual);
+    resultadoDiv.appendChild(min);
+    resultadoDiv.appendChild(max);
 
     resultado.appendChild(resultadoDiv);
 } 
